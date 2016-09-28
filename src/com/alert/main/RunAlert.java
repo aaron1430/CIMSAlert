@@ -65,9 +65,12 @@ public class RunAlert {
 	 *            报警接收用户
 	 * @param contract
 	 *            报警所属合同
+	 * @param task
+	 *            引起报警的任务
 	 */
-	private void alarmToUser(String alarCode, String alarContent, User user, Contract contract) {
+	private void alarmToUser(String alarCode, String alarContent, User user, Contract contract, Task task) {
 		// TODO Auto-generated method stub
+
 		Alarm alarm = new Alarm();
 		alarm.setAlar_code(alarCode);
 		alarm.setAlar_content(alarContent);
@@ -75,6 +78,63 @@ public class RunAlert {
 		alarm.setContract(contract);
 		alarm.setAlar_isremove(0);
 		alarm.setAlar_time(new Date());
+		alarm.setTask(task);
+		alarmRepository.saveAndFlush(alarm);
+	}
+
+	/**
+	 * 报警给用户
+	 * 
+	 * @param alarCode
+	 *            报警编码
+	 * @param alarContent
+	 *            报警内容
+	 * @param user
+	 *            报警接收用户
+	 * @param contract
+	 *            报警所属合同
+	 * @param ps
+	 *            引起报警的工程进度
+	 */
+	private void alarmToUser(String alarCode, String alarContent, User user, Contract contract, ProjectStage ps) {
+		// TODO Auto-generated method stub
+
+		Alarm alarm = new Alarm();
+		alarm.setAlar_code(alarCode);
+		alarm.setAlar_content(alarContent);
+		alarm.setUser(user);
+		alarm.setContract(contract);
+		alarm.setAlar_isremove(0);
+		alarm.setAlar_time(new Date());
+		alarm.setProjectStage(ps);
+		alarmRepository.saveAndFlush(alarm);
+	}
+
+	/**
+	 * 报警给用户
+	 * 
+	 * @param alarCode
+	 *            报警编码
+	 * @param alarContent
+	 *            报警内容
+	 * @param user
+	 *            报警接收用户
+	 * @param contract
+	 *            报警所属合同
+	 * @param rn
+	 *            引起报警的收款节点
+	 */
+	private void alarmToUser(String alarCode, String alarContent, User user, Contract contract, ReceiveNode rn) {
+		// TODO Auto-generated method stub
+
+		Alarm alarm = new Alarm();
+		alarm.setAlar_code(alarCode);
+		alarm.setAlar_content(alarContent);
+		alarm.setUser(user);
+		alarm.setContract(contract);
+		alarm.setAlar_isremove(0);
+		alarm.setAlar_time(new Date());
+		alarm.setReceiveNode(rn);
 		alarmRepository.saveAndFlush(alarm);
 	}
 
@@ -112,8 +172,8 @@ public class RunAlert {
 
 		User taskReceiver = task.getReceiver();
 		User taskCreator = task.getCreator();
-		alarmToUser(alarmCode, alarmContent, taskReceiver, alarmContract);
-		alarmToUser(alarmCode, alarmContent, taskCreator, alarmContract);
+		alarmToUser(alarmCode, alarmContent, taskReceiver, alarmContract, task);
+		alarmToUser(alarmCode, alarmContent, taskCreator, alarmContract, task);
 	}
 
 	/**
@@ -164,8 +224,10 @@ public class RunAlert {
 	 */
 	private void updateContractPSAlarmCount(Contract contract) {
 		// TODO Auto-generated method stub
-		contract.setCont_proalanum(contract.getCont_proalanum() + 1);
-		contractRepository.saveAndFlush(contract);
+		if (contract != null) {
+			contract.setCont_proalanum(contract.getCont_proalanum() + 1);
+			contractRepository.saveAndFlush(contract);
+		}
 	}
 
 	/**
@@ -187,8 +249,10 @@ public class RunAlert {
 			if (days >= levelList.get(i).getAlle_days()) {
 				List<User> recList = userRepository.findByRoleID(levelList.get(i).getRole().getRole_id());
 				for (int j = 0; j < recList.size(); j++) {
-					alarmToUser("5", "工程进度超时：	负责人：" + projectStage.getManager().getUser_name() + "	内容："
-							+ projectStage.getPrst_content(), recList.get(j), projectStage.getContract());
+					alarmToUser("5",
+							"工程进度超时：	负责人：" + projectStage.getManager().getUser_name() + "	内容："
+									+ projectStage.getPrst_content(),
+							recList.get(j), projectStage.getContract(), projectStage);
 				}
 
 			}
@@ -207,7 +271,7 @@ public class RunAlert {
 		String alarmCode = "4";
 		User alarmUser = projectStage.getUser();
 		Contract alarmContract = projectStage.getContract();
-		alarmToUser(alarmCode, alarmContent, alarmUser, alarmContract);
+		alarmToUser(alarmCode, alarmContent, alarmUser, alarmContract, projectStage);
 
 	}
 
@@ -241,8 +305,10 @@ public class RunAlert {
 
 	private void updateContractRNAlarmCount(Contract contract) {
 		// TODO Auto-generated method stub
-		contract.setCont_payalanum(contract.getCont_payalanum() + 1);
-		contractRepository.saveAndFlush(contract);
+		if (contract != null) {
+			contract.setCont_payalanum(contract.getCont_payalanum() + 1);
+			contractRepository.saveAndFlush(contract);
+		}
 	}
 
 	/**
@@ -264,8 +330,10 @@ public class RunAlert {
 			if (days >= levelList.get(i).getAlle_days()) {
 				List<User> recList = userRepository.findByRoleID(levelList.get(i).getRole().getRole_id());
 				for (int j = 0; j < recList.size(); j++) {
-					alarmToUser("3", "收款超时：	负责人：" + receiveNode.getUser().getUser_name() + "	内容："
-							+ receiveNode.getReno_content(), recList.get(j), receiveNode.getContract());
+					alarmToUser("3",
+							"收款超时：	负责人：" + receiveNode.getUser().getUser_name() + "	内容："
+									+ receiveNode.getReno_content(),
+							recList.get(j), receiveNode.getContract(), receiveNode);
 				}
 
 			}
@@ -284,6 +352,6 @@ public class RunAlert {
 		String alarmCode = "2";
 		User alarmUser = receiveNode.getUser();
 		Contract alarmContract = receiveNode.getContract();
-		alarmToUser(alarmCode, alarmContent, alarmUser, alarmContract);
+		alarmToUser(alarmCode, alarmContent, alarmUser, alarmContract, receiveNode);
 	}
 }

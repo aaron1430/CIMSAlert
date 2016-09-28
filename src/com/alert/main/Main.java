@@ -30,24 +30,24 @@ public class Main {
 		RunAlert runalert = (RunAlert) getBean("runAlert");
 		SimpleDateFormat df = new SimpleDateFormat("HH:mm");// 设置日期格式
 		String now = "";
-		// runalert.run();// 用于测试，发布时去掉，用下面的代码
+		 runalert.run();// 用于测试，发布时去掉，用下面的代码
 
-		while (true) {
-			now = df.format(new Date());
-			// 每天凌晨0点更新报警信息
-			if (now.equals("00:00"))
-				runalert.run();
-			else {
-				try {
-					System.out.println("没到时间");
-					Thread.sleep(20000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					System.out.println("报错");
-					e.printStackTrace();
-				}
-			}
-		}
+//		while (true) {
+//			now = df.format(new Date());
+//			// 每天凌晨0点更新报警信息
+//			if (now.equals("00:00"))
+//				runalert.run();
+//			else {
+//				try {
+//					System.out.println("没到时间");
+//					Thread.sleep(20000);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					System.out.println("报错");
+//					e.printStackTrace();
+//				}
+//			}
+//		}
 	}
 
 }
