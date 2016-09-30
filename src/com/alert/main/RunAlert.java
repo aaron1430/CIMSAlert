@@ -224,10 +224,12 @@ public class RunAlert {
 	 */
 	private void updateContractPSAlarmCount(Contract contract) {
 		// TODO Auto-generated method stub
-		if (contract != null) {
+		if (contract.getCont_proalanum() != null) {
 			contract.setCont_proalanum(contract.getCont_proalanum() + 1);
-			contractRepository.saveAndFlush(contract);
+		} else {
+			contract.setCont_proalanum(1);
 		}
+		contractRepository.saveAndFlush(contract);
 	}
 
 	/**
@@ -305,10 +307,12 @@ public class RunAlert {
 
 	private void updateContractRNAlarmCount(Contract contract) {
 		// TODO Auto-generated method stub
-		if (contract != null) {
+		if (contract.getCont_payalanum() != null) {
 			contract.setCont_payalanum(contract.getCont_payalanum() + 1);
-			contractRepository.saveAndFlush(contract);
+		} else {
+			contract.setCont_payalanum(1);
 		}
+		contractRepository.saveAndFlush(contract);
 	}
 
 	/**
